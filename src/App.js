@@ -4,6 +4,9 @@ import Counters from "./components/counters";
 import Navbar from "./components/navbar";
 import Hello from "./components/hello";
 import Add from "./components/add";
+import Todo from "./components/todo";
+import Form from "./components/form";
+import AxiosGet from "./components/axiosGet";
 
 class App extends Component {
   state = {
@@ -41,8 +44,8 @@ class App extends Component {
   };
   render() {
     return (
-      <React.Fragment>
-        <Navbar
+      <div className="main">
+        {/* <Navbar
           ontotal={this.state.counter.filter((c) => c.value > 0).length}
           onsum={this.state.counter
             .map((c) => c.value)
@@ -56,10 +59,13 @@ class App extends Component {
             onincrement={this.increment}
             ondecrement={this.decrement}
           />
-        </main>
-        <Hello />
+          </main>*/}
+        {/* <Hello /> */}
         {/* <Add /> */}
-      </React.Fragment>
+        {/* <Todo /> */}
+        {/* <Form /> */}
+        <AxiosGet />
+      </div>
     );
   }
 }

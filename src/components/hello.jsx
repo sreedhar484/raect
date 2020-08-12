@@ -1,94 +1,159 @@
 import React, { Component } from "react";
+import Form from "./form";
+import Form1 from "./form1";
 class Hello extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: "",
+      firstname: "",
+      lastname: "",
+      mail: "",
       password: "",
-      text: "",
-      inp: "",
+      cpassword: "",
+      number: "",
+      gender: "select",
+      marital: "select",
+      dob: "",
+      address: "",
+      ftext: "",
+      ltext: "",
+      mtext: "",
       ptext: "",
-      pinp: "",
-      uerror: "",
+      cptext: "",
+      ntext: "",
+      gtext: "",
+      matext: "",
+      ferror: "",
+      lerror: "",
+      merror: "",
       perror: "",
+      cperror: "",
+      nerror: "",
+      gerror: "",
+      maerror: "",
+      box: "box",
+      box1: "",
     };
   }
-  onUsername = (event) => {
-    event.target.value.length < 5
+  onFirstName = (event) => {
+    event.target.value.length < 1
       ? this.setState({
-          text: "text-danger",
-          inp: "invalid",
-          uerror: "must be 5 chareters.",
+          ftext: "text-danger",
+          ferror: "Enter the First Name",
         })
-      : this.setState({ text: "text-success", inp: "valid", uerror: "" });
-    this.setState({ name: event.target.value });
+      : this.setState({ ftext: "text-success", ferror: "" });
+    this.setState({ firstname: event.target.value });
   };
+
+  onLastName = (event) => {
+    event.target.value.length < 1
+      ? this.setState({
+          ltext: "text-danger",
+          lerror: "Enter the Lasst Name.",
+        })
+      : this.setState({ ltext: "text-success", lerror: "" });
+    this.setState({ lastname: event.target.value });
+  };
+
+  onEmail = (event) => {
+    event.target.value.length < 8
+      ? this.setState({
+          mtext: "text-danger",
+          merror: "Enter A valid mail adddress.",
+        })
+      : this.setState({ mtext: "text-success", merror: "" });
+    this.setState({ mail: event.target.value });
+  };
+
   onPassword = (event) => {
-    event.target.value.length > 8
-      ? this.setState({ ptext: "text-success", pinp: "valid", perror: "" })
+    event.target.value.length > 7
+      ? this.setState({ ptext: "text-success", perror: "" })
       : this.setState({
           ptext: "text-danger",
-          pinp: "invalid",
           perror: "Must be 8-20 characters long.",
         });
     this.setState({ password: event.target.value });
   };
+
+  onCPassword = (event) => {
+    event.target.value === this.state.password
+      ? this.setState({ cptext: "text-success", cperror: "" })
+      : this.setState({
+          cptext: "text-danger",
+          inp: "invalid",
+          cperror: "Password does not match.",
+        });
+    this.setState({ cpassword: event.target.value });
+  };
+
+  onNumber = (event) => {
+    event.target.value.length === 10
+      ? this.setState({ ntext: "text-success", nerror: "" })
+      : this.setState({
+          ntext: "text-danger",
+          nerror: "Enter valid phone number.",
+        });
+    this.setState({ number: event.target.value });
+  };
+
+  onAddress = (event) => {
+    this.setState({ address: event.target.value });
+  };
+
+  onGender = (event) => {
+    this.setState({ gender: event.target.value });
+  };
+
+  onMarital = (event) => {
+    this.setState({ marital: event.target.value });
+  };
+
+  onDOB = (event) => {
+    this.setState({ dob: event.target.value });
+  };
+
   onHandleSubmit = (event) => {
-    alert("Logged in");
+    this.state.marital === "select"
+      ? this.setState({
+          matext: "text-danger",
+          maerror: "select a valid option.",
+        })
+      : this.setState({ matext: "text-success", maerror: "" });
+
+    this.state.gender === "select"
+      ? this.setState({
+          gtext: "text-danger",
+          gerror: "select a gender.",
+        })
+      : this.setState({ gtext: "text-success", gerror: "" });
+    if (this.state.gender != "select" && this.state.marital != "select") {
+      this.setState({ box: "", box1: "box" });
+    }
     event.preventDefault();
   };
   render() {
     return (
-      <div className="container">
-        <form onSubmit={this.onHandleSubmit}>
-          <div className="form-group row">
-            <label
-              htmlFor="inputEmail"
-              className={`col-sm-2 col-form-label ${this.state.text}`}
-            >
-              Email
-            </label>
-            <div class="col-sm-7">
-              <input
-                type="text"
-                className={`form-control ${this.state.inp}`}
-                id="inputEmail"
-                placeholder="Email"
-                onChange={this.onUsername}
-              ></input>
-            </div>
-            <div className="col-sm-3">
-              <small id="passwordHelp" className={this.state.text}>
-                {this.state.uerror}
-              </small>
-            </div>
-          </div>
-
-          <div className="form-group row">
-            <label
-              htmlFor="inputPassword"
-              className={`col-sm-2 col-form-label ${this.state.ptext}`}
-            >
-              Password
-            </label>
-            <div className="col-sm-7">
-              <input
-                type="password"
-                className={`form-control ${this.state.pinp}`}
-                id="inputPassword"
-                placeholder="Password"
-                onChange={this.onPassword}
-              />
-            </div>
-            <div className="col-sm-3">
-              <small id="passwordHelp" className={this.state.ptext}>
-                {this.state.perror}
-              </small>
-            </div>
-          </div>
-          <button className="btn btn-primary btn-block">Login</button>
-        </form>
-      </div>
+      <React.Fragment>
+        <div className={this.state.box1}>
+          <Form
+            state={this.state}
+            onFirstName={this.onFirstName}
+            onAddress={this.onAddress}
+            onLastName={this.onLastName}
+            onEmail={this.onEmail}
+            onPassword={this.onPassword}
+            onCPassword={this.onCPassword}
+            onNumber={this.onNumber}
+            onGender={this.onGender}
+            onMarital={this.onMarital}
+            onDOB={this.onDOB}
+            onHandleSubmit={this.onHandleSubmit}
+          />
+        </div>
+        <div className={this.state.box}>
+          <Form1 state={this.state} />
+        </div>
+      </React.Fragment>
     );
   }
 }
