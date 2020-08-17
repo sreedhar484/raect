@@ -5,11 +5,15 @@ import App from "./App";
 import Main from "./components/main";
 import * as serviceWorker from "./serviceWorker";
 import "bootstrap/dist/css/bootstrap.css";
+import register from "./components/register";
+import Mainhook from "./hooks/mainhook";
 
 ReactDOM.render(
   <React.StrictMode>
     {/* <App/> */}
-    <Main />
+    {/* <Main /> */}
+    {/* <register /> */}
+    <Mainhook />
   </React.StrictMode>,
   document.getElementById("root")
 );
