@@ -10,8 +10,13 @@ function Submit() {
         w="10%"
         d={["none", "none", "none", "flex"]}
       >
-        <Button backgroundColor="#1A365D" w="100%" color="white">
-          <Link to="/main">Back</Link>
+        <Button
+          backgroundColor="white"
+          w="100%"
+          color="#1A365D"
+          border="1px solid #1A365D"
+        >
+          <Link to="/main">BACK</Link>
         </Button>
       </Box>
       <Box mt={["20%", "20%", "15%", "15%"]} mx={6} w="80%">

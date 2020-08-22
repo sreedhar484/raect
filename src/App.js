@@ -4,6 +4,7 @@ import Main from "./components/main";
 import { ThemeProvider, CSSReset } from "@chakra-ui/core";
 import Log from "./components/log";
 import Pophover from "./components/Pophover";
+import Paginate from "./components/Paginate";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <CSSReset />
       <Main />
       {/* <Pophover /> */}
+      {/* <Paginate /> */}
     </ThemeProvider>
   );
 }

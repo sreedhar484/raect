@@ -14,15 +14,26 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-  PopoverHeader,
   PopoverBody,
-  PopoverFooter,
   PopoverArrow,
   PopoverCloseButton,
 } from "@chakra-ui/core";
 import "../App.css";
+import ReactPaginate from "react-paginate";
 
-export class Content extends Component {
+class Content extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      search1: false,
+    };
+  }
+  onMouse = () => {
+    this.setState({ search1: !this.state.search1 }, () =>
+      console.log(this.state.search1)
+    );
+  };
   render() {
     return (
       <React.Fragment>
@@ -32,15 +43,33 @@ export class Content extends Component {
             gap={0}
             mx={4}
             mt={6}
-            shadow="lg"
+            boxShadow="0px 0px 5px 0px rgba(0,0,0,.5)"
+            border="1px solid white"
+            borderRadius="10px"
             d={["none", "none", "none", "grid"]}
           >
             <Grid templateColumns="75% 25%" gap={0}>
-              <Text p={5}>104 Potential Buyers</Text>
-              <Text p={5}>1,57,68,000 Pledged Amount</Text>
+              <Text p={3} d="flex">
+                <Text fontSize={26} mr={2}>
+                  {this.props.state.array.length}
+                </Text>
+                <Text pt={2}>Potential Buyers</Text>
+              </Text>
+              <Text p={4}>
+                &#8377; {this.props.state.totalpledged} Pledged Amount
+              </Text>
             </Grid>
-            <Text backgroundColor="#CBD5E0" fontWeight="bold" p={5}>
-              51,87,000 Realized Amount
+            <Text
+              backgroundColor="#CBD5E0"
+              color="blue.800"
+              fontWeight="bold"
+              p={3}
+              d="flex"
+            >
+              <Text fontSize={26} mr={2} ml={20}>
+                &#8377; {this.props.state.totalrecieved}
+              </Text>
+              <Text pt={2}>Realized Amount</Text>
             </Text>
           </Grid>
           <Grid
@@ -50,15 +79,35 @@ export class Content extends Component {
             mt={4}
             d={["grid", "grid", "grid", "none"]}
           >
-            <Text p={5} shadow="lg" textAlign="center">
-              51,87,000 Realized Amount
+            <Text
+              boredr="1px solid white"
+              borderRadius="5px"
+              p={5}
+              boxShadow="0px 0px 5px 0px rgba(0,0,0,.5)"
+              textAlign="center"
+              color="blue.800"
+              fontSize={24}
+            >
+              <b>&#8377; {this.props.state.totalrecieved}</b> Realized Amount
             </Text>
-            <Text p={5} shadow="lg" textAlign="center">
-              1,57,68,000 Pledged by 104 Buyers
+            <Text
+              boredr="1px solid white"
+              borderRadius="5px"
+              p={5}
+              fontSize={20}
+              boxShadow="0px 0px 5px 0px rgba(0,0,0,.5)"
+              textAlign="center"
+            >
+              &#8377; {this.props.state.totalpledged} Pledged by{" "}
+              <b>{this.props.state.array.length}</b> Buyers
             </Text>
           </Grid>
-
-          <Grid templateColumns="80% 20%" gap={0} mx={4} mt={6}>
+          <Grid
+            templateColumns={this.state.search1 ? "50% 50%" : "80% 20%"}
+            gap={0}
+            mx={4}
+            mt={6}
+          >
             <Text>
               All Debenture Buyers
               <Button
@@ -69,9 +118,10 @@ export class Content extends Component {
                 borderRadius="5px"
                 fontSize="12px"
                 h="30px"
+                onClick={this.props.addNew}
               >
                 {"  "}
-                <Icon name="add" color="blue.500" />
+                <Icon name="add" color="blue.500" mb={1} mr={2} />
                 <Link to="newForm">ADD A NEW ENTRY</Link>
               </Button>
             </Text>
@@ -86,9 +136,21 @@ export class Content extends Component {
                 placeholder="Search Entry"
                 variant="flushed"
                 h="30px"
+                onChange={this.props.search}
               />
             </InputGroup>
             <Box d={["flex", "flex", "flex", "none"]}>
+              {this.state.search1 ? (
+                <Input
+                  type="text"
+                  placeholder="Search Entry"
+                  variant="flushed"
+                  h="30px"
+                  onChange={this.props.search}
+                />
+              ) : (
+                ""
+              )}
               <IconButton
                 variant="outline"
                 variantColor="white"
@@ -96,20 +158,41 @@ export class Content extends Component {
                 fontSize="20px"
                 icon="search"
                 border="none"
+                onClick={this.onMouse}
               ></IconButton>
-              <IconButton
-                variant="outline"
-                variantColor="white"
-                aria-label="Call Sage"
-                fontSize="20px"
-                icon="copy"
-                border="none"
-              ></IconButton>
+              <Popover placement="left-start">
+                <PopoverTrigger>
+                  <IconButton
+                    variant="outline"
+                    variantColor="white"
+                    aria-label="Call Sage"
+                    fontSize="20px"
+                    icon="copy"
+                    border="none"
+                  ></IconButton>
+                </PopoverTrigger>
+                <PopoverContent zIndex={4} backgroundColor="teal.500" w="150px">
+                  <PopoverArrow />
+                  <PopoverBody color="white">
+                    <Button backgroundColor="teal.500" border="none">
+                      <Icon name="edit" mr={2}></Icon>Edit
+                    </Button>
+                    <br></br>
+                    <Button
+                      icon="delete"
+                      backgroundColor="teal.500"
+                      border="none"
+                    >
+                      <Icon name="delete" mr={2}></Icon>Delete
+                    </Button>
+                  </PopoverBody>
+                </PopoverContent>
+              </Popover>
             </Box>
           </Grid>
           <Grid
             d={["none", "none", "none", "grid"]}
-            templateRows="repeat(3, 1fr)"
+            templateRows="repeat(4, 1fr)"
             mx={4}
             mt={4}
             border="1px solid #153E75"
@@ -126,231 +209,303 @@ export class Content extends Component {
               p={2}
             >
               <Text d="flex">
-                <Text>NAME</Text>
+                <Text mr={2}>NAME</Text>
                 <Grid templateRows="1fr 1fr">
-                  <Icon name="triangle-up" size="12px" />
-                  <Icon name="triangle-down" size="12px" />
+                  <IconButton
+                    icon="triangle-up"
+                    border="none"
+                    backgroundColor="none"
+                    size="8px"
+                    onClick={() => this.props.nameAsci("name")}
+                  />
+                  <IconButton
+                    icon="triangle-down"
+                    border="none"
+                    size="8px"
+                    backgroundColor="none"
+                    onClick={() => this.props.nameDsci("name")}
+                  />
                 </Grid>
               </Text>
               <Text>PHONE</Text>
               <Text>EMAIL</Text>
               <Text d="flex">
-                <Text>PLEDGED DATE</Text>
+                <Text mr={2}>PLEDGED DATE</Text>
                 <Grid templateRows="1fr 1fr">
-                  <Icon name="triangle-up" size="12px" />
-                  <Icon name="triangle-down" size="12px" />
+                  <IconButton
+                    icon="triangle-up"
+                    border="none"
+                    backgroundColor="none"
+                    size="8px"
+                  />
+                  <IconButton
+                    icon="triangle-down"
+                    border="none"
+                    size="8px"
+                    backgroundColor="none"
+                  />
                 </Grid>
               </Text>
               <Text d="flex">
-                <Text>PLEDGED AMOUNT</Text>
+                <Text mr={2}>PLEDGED AMOUNT</Text>
                 <Grid templateRows="1fr 1fr">
-                  <Icon name="triangle-up" size="12px" />
-                  <Icon name="triangle-down" size="12px" />
+                  <IconButton
+                    icon="triangle-up"
+                    border="none"
+                    backgroundColor="none"
+                    size="8px"
+                    onClick={() => this.props.nameAsci("pledgedAmount")}
+                  />
+                  <IconButton
+                    icon="triangle-down"
+                    border="none"
+                    size="8px"
+                    backgroundColor="none"
+                    onClick={() => this.props.nameDsci("pledgedAmount")}
+                  />
                 </Grid>
               </Text>
               <Text d="flex">
-                <Text>RECIEVED DATE</Text>
+                <Text mr={2}>RECIEVED DATE</Text>
                 <Grid templateRows="1fr 1fr">
-                  <Icon name="triangle-up" size="12px" />
-                  <Icon name="triangle-down" size="12px" />
+                  <IconButton
+                    icon="triangle-up"
+                    border="none"
+                    backgroundColor="none"
+                    size="8px"
+                  />
+                  <IconButton
+                    icon="triangle-down"
+                    border="none"
+                    size="8px"
+                    backgroundColor="none"
+                  />
                 </Grid>
               </Text>
               <Text d="flex">
-                <Text>RECIEVED AMOUNT</Text>
+                <Text mr={2}>RECIEVED AMOUNT</Text>
                 <Grid templateRows="1fr 1fr">
-                  <Icon name="triangle-up" size="12px" />
-                  <Icon name="triangle-down" size="12px" />
+                  <IconButton
+                    icon="triangle-up"
+                    border="none"
+                    backgroundColor="none"
+                    size="8px"
+                    onClick={() => this.props.nameAsci("recievedAmount")}
+                  />
+                  <IconButton
+                    icon="triangle-down"
+                    border="none"
+                    size="8px"
+                    backgroundColor="none"
+                    onClick={() => this.props.nameAsci("recievedAmount")}
+                  />
                 </Grid>
               </Text>
               <Text>STATUS</Text>
             </Grid>
-
-            <Grid templateColumns="repeat(8, 1fr)" p={2} gap={2}>
-              <Text>sreedhar</Text>
-              <Text>+916302306825</Text>
-              <Text>sreedharr484@gmail.com</Text>
-              <Text>15 mar 2020</Text>
-              <Text>40,000</Text>
-              <Text>15 mar 2020</Text>
-              <Text>40,000</Text>
-              <Text color="green.500">
-                <ListIcon icon="check-circle" color="green.500" />
-                RECIEVED
-                <Popover>
-                  <PopoverTrigger>
-                    <IconButton
-                      variant="outline"
-                      variantColor="white"
-                      aria-label="Call Sage"
-                      fontSize="20px"
-                      icon="drag-handle"
-                      border="none"
-                    ></IconButton>
-                  </PopoverTrigger>
-                  <PopoverContent
-                    zIndex={4}
-                    backgroundColor="teal.500"
-                    w="150px"
-                  >
-                    <PopoverArrow />
-                    <PopoverCloseButton />
-                    <PopoverBody color="white">
+            {this.props.state.cou.map((data, idx) => (
+              <Grid templateColumns="repeat(8, 1fr)" p={2} gap={2} key={idx}>
+                <Text>{data.name}</Text>
+                <Text>{data.phone}</Text>
+                <Text>{data.email}</Text>
+                <Text>{data.pledgedDate}</Text>
+                <Text textAlign="center">{data.pledgedAmount}</Text>
+                <Text>{data.recievedDate}</Text>
+                <Text textAlign="center">{data.recievedAmount}</Text>
+                <Text
+                  color={
+                    data.status === "recieved"
+                      ? "green.500"
+                      : data.status === "pledged"
+                      ? "teal.500"
+                      : data.status === "declined"
+                      ? "red.500"
+                      : "blue.500"
+                  }
+                >
+                  <ListIcon
+                    icon={
+                      data.status === "recieved"
+                        ? "check-circle"
+                        : data.status === "pledged"
+                        ? "time"
+                        : data.status === "declined"
+                        ? "warning"
+                        : "check-circle"
+                    }
+                    color={
+                      data.status === "recieved"
+                        ? "green.500"
+                        : data.status === "pledged"
+                        ? "teal.500"
+                        : data.status === "declined"
+                        ? "red.500"
+                        : "blue.500"
+                    }
+                  />
+                  {data.status.toUpperCase()}
+                  <Popover>
+                    <PopoverTrigger>
                       <IconButton
-                        icon="edit"
-                        backgroundColor="teal.500"
+                        variant="outline"
+                        variantColor="white"
+                        aria-label="Call Sage"
+                        fontSize="20px"
+                        icon="drag-handle"
                         border="none"
                       ></IconButton>
-                      Edit<br></br>
-                      <IconButton
-                        icon="delete"
-                        backgroundColor="teal.500"
-                        border="none"
-                      ></IconButton>
-                      Delete
-                    </PopoverBody>
-                  </PopoverContent>
-                </Popover>
-              </Text>
-            </Grid>
-
-            <Grid templateColumns="repeat(8, 1fr)" p={2} gap={2}>
-              <Text>sreedhar</Text>
-              <Text>+916302306825</Text>
-              <Text>sreedharr484@gmail.com</Text>
-              <Text>15 mar 2020</Text>
-              <Text>40,000</Text>
-              <Text>15 mar 2020</Text>
-              <Text>40,000</Text>
-              <Text color="green.500">
-                <ListIcon icon="check-circle" color="green.500" />
-                RECIEVED
-                <Popover>
-                  <PopoverTrigger>
-                    <IconButton
-                      variant="outline"
-                      variantColor="white"
-                      aria-label="Call Sage"
-                      fontSize="20px"
-                      icon="drag-handle"
-                      border="none"
-                    ></IconButton>
-                  </PopoverTrigger>
-                  <PopoverContent
-                    zIndex={4}
-                    backgroundColor="teal.500"
-                    w="150px"
-                  >
-                    <PopoverArrow />
-                    <PopoverCloseButton />
-                    <PopoverBody color="white">
-                      <IconButton
-                        icon="edit"
-                        backgroundColor="teal.500"
-                        border="none"
-                      ></IconButton>
-                      Edit<br></br>
-                      <IconButton
-                        icon="delete"
-                        backgroundColor="teal.500"
-                        border="none"
-                      ></IconButton>
-                      Delete
-                    </PopoverBody>
-                  </PopoverContent>
-                </Popover>
-              </Text>
-            </Grid>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      zIndex={4}
+                      backgroundColor="teal.500"
+                      w="150px"
+                    >
+                      <PopoverArrow />
+                      <PopoverBody color="white">
+                        <Button
+                          backgroundColor="teal.500"
+                          border="none"
+                          onClick={() => this.props.onEdit(data.id)}
+                        >
+                          {this.props.state.edit ? (
+                            <Link to="/newForm">
+                              <Icon name="edit" mr={2} />
+                            </Link>
+                          ) : (
+                            <Icon name="edit" mr={2} />
+                          )}
+                          Edit
+                        </Button>
+                        <br></br>
+                        <Button
+                          icon="delete"
+                          backgroundColor="teal.500"
+                          border="none"
+                        >
+                          <Icon name="delete" mr={2}></Icon>Delete
+                        </Button>
+                      </PopoverBody>
+                    </PopoverContent>
+                  </Popover>
+                </Text>
+              </Grid>
+            ))}
           </Grid>
           <Grid
             d={["grid", "grid", "grid", "none"]}
-            templateRows="repeat(2, 1fr)"
+            templateRows="repeat(3, 1fr)"
             gap={4}
             mx={4}
             mt={4}
           >
-            <Box shadow="lg">
-              <Grid templateColumns="2fr 1fr" backgroundColor="#CBD5E0">
-                <Text pl={4} py={4}>
-                  Sreedhar
-                </Text>
-                <Text color="green.500" pl={4} py={4}>
-                  <ListIcon icon="check-circle" color="green.500" />
-                  RECIEVED
-                </Text>
-              </Grid>
-              <Grid templateColumns="1fr 1fr">
-                <Text pl={4} py={4}>
-                  Recieved Amount
-                </Text>
-                <Text pl={4} py={4}>
-                  Recieved Date
-                </Text>
-              </Grid>
-              <Grid templateColumns="1fr 1fr">
-                <Text pl={4} pb={2}>
-                  40,000
-                </Text>
-                <Text pl={4} pb={2}>
-                  15 Mar 2020
-                </Text>
-              </Grid>
-            </Box>
-            <Box shadow="lg">
-              <Grid templateColumns="2fr 1fr" backgroundColor="#CBD5E0">
-                <Text pl={4} py={4}>
-                  Sreedhar
-                </Text>
-                <Text color="green.500" pl={4} py={4}>
-                  <ListIcon icon="check-circle" color="green.500" />
-                  RECIEVED
-                </Text>
-              </Grid>
-              <Grid templateColumns="1fr 1fr">
-                <Text pl={4} py={4}>
-                  Recieved Amount
-                </Text>
-                <Text pl={4} py={4}>
-                  Recieved Date
-                </Text>
-              </Grid>
-              <Grid templateColumns="1fr 1fr">
-                <Text pl={4} pb={2}>
-                  40,000
-                </Text>
-                <Text pl={4} pb={2}>
-                  15 Mar 2020
-                </Text>
-              </Grid>
-            </Box>
+            {this.props.state.cou.map((data, idx) => (
+              <Box
+                boxShadow="0px 0px 5px 0px rgba(0,0,0,.5)"
+                key={idx}
+                boredr="1px solid white"
+                borderRadius="5px"
+              >
+                <Grid templateColumns="2fr 1fr" backgroundColor="#CBD5E0">
+                  <Text pl={4} py={4}>
+                    {data.name}
+                  </Text>
+                  <Text
+                    pl={4}
+                    py={4}
+                    color={
+                      data.status === "recieved"
+                        ? "green.500"
+                        : data.status === "pledged"
+                        ? "teal.500"
+                        : data.status === "declined"
+                        ? "red.500"
+                        : "blue.500"
+                    }
+                  >
+                    <ListIcon
+                      icon={
+                        data.status === "recieved"
+                          ? "check-circle"
+                          : data.status === "pledged"
+                          ? "time"
+                          : data.status === "declined"
+                          ? "warning"
+                          : "check-circle"
+                      }
+                      color={
+                        data.status === "recieved"
+                          ? "green.500"
+                          : data.status === "pledged"
+                          ? "teal.500"
+                          : data.status === "declined"
+                          ? "red.500"
+                          : "blue.500"
+                      }
+                    />
+                    {data.status.toUpperCase()}
+                  </Text>
+                </Grid>
+                <Grid templateColumns="1fr 1fr">
+                  <Text pl={4} py={4}>
+                    {data.status === "recieved" || data.status === "reduced"
+                      ? "Recieved Amount"
+                      : "Pledged Amount"}
+                  </Text>
+                  <Text pl={4} py={4}>
+                    {data.status === "recieved" || data.status === "reduced"
+                      ? "Recieved Date"
+                      : "Pledged Date"}
+                  </Text>
+                </Grid>
+                <Grid templateColumns="1fr 1fr">
+                  <Text pl={4} pb={2}>
+                    {data.status === "recieved" || data.status === "reduced"
+                      ? data.recievedAmount
+                      : data.pledgedAmount}
+                  </Text>
+                  <Text pl={4} pb={2}>
+                    {data.status === "recieved" || data.status === "reduced"
+                      ? data.recievedDate
+                      : data.pledgedDate}
+                  </Text>
+                </Grid>
+              </Box>
+            ))}
           </Grid>
-          <Text
-            textAlign="center"
-            p="8px"
-            width="150px"
-            float="right"
-            mr={4}
-            ml="89%"
-            mt={4}
-            border="1px solid #153E75"
-            borderRadius="5px"
+          <Box
             d={["none", "none", "none", "flex"]}
+            float="right"
+            border="1px solid grey"
+            color="blue.800"
+            mr={4}
+            mt={4}
+            h={8}
+            borderRadius="5px"
           >
-            &lt;
-            <b>
-              <u>1</u>
-            </b>
-            /130&gt;
-          </Text>
+            <ReactPaginate
+              previousLabel={<Icon name="chevron-left" />}
+              nextLabel={<Icon name="chevron-right" />}
+              breakLabel={"/ " + " " + this.props.state.pageCount}
+              pageCount={this.props.state.pageCount}
+              marginPagesDisplayed={0}
+              pageRangeDisplayed={0}
+              onPageChange={this.props.handlePageClick}
+              containerClassName={"pagination"}
+              subContainerClassName={"pages pagination"}
+              activeClassName={"active"}
+            />
+          </Box>
           <Button
             bottom="0px"
             d={["flex", "flex", "flex", "none"]}
-            mx="2%"
+            mx="3%"
             backgroundColor="white"
             border="1px solid blue"
             borderRadius="5px"
             fontSize="12px"
             h="30px"
-            w="96%"
+            w="94%"
+            onClick={this.props.addNew}
           >
             {"  "}
             <Icon name="add" color="blue.500" />

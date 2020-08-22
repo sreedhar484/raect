@@ -1,7 +1,8 @@
 import React from "react";
-import { Box, Text, Flex, Avatar } from "@chakra-ui/core";
-
-function Appbar() {
+import { Box, Text, Flex, Avatar, Icon } from "@chakra-ui/core";
+import ReactPaginate from "react-paginate";
+import "../App.css";
+function Appbar(props) {
   return (
     <Box h={20} backgroundColor="blue.800" width="100%" float="right" mt="0px">
       <Flex
@@ -21,18 +22,25 @@ function Appbar() {
         </Box>
         <Box
           d={["flex", "flex", "flex", "none"]}
-          border="2px solid white"
           borderRadius="5px"
           color="white"
-          ml="100%"
+          border="1px solid white"
+          ml="80%"
+          h={8}
+          mt={2}
         >
-          <Text textAlign="center" p="8px">
-            &lt;
-            <b>
-              <u>1</u>
-            </b>
-            /130&gt;
-          </Text>
+          <ReactPaginate
+            previousLabel={<Icon name="chevron-left" />}
+            nextLabel={<Icon name="chevron-right" />}
+            breakLabel={"/" + props.state.pageCount}
+            pageCount={props.state.pageCount}
+            marginPagesDisplayed={0}
+            pageRangeDisplayed={0}
+            onPageChange={props.handlePageClick}
+            containerClassName={"pagination"}
+            subContainerClassName={"pages pagination"}
+            activeClassName={"active"}
+          />
         </Box>
       </Flex>
     </Box>
