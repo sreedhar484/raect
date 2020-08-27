@@ -5,11 +5,10 @@ import {
   Button,
   Input,
   FormControl,
-  FormErrorMessage,
-  FormLabel,
   FormHelperText,
 } from "@chakra-ui/core";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import Axios from "axios";
+import { Redirect } from "react-router-dom";
 
 function Log(props) {
   return (
@@ -22,78 +21,47 @@ function Log(props) {
         float="right"
       >
         <Box mx={10} mt="60%" mb="22%">
-          <form>
-            <Text my={6} fontWeight="bold" fontSize="2rem" color="#4299E1">
-              LOGIN
-            </Text>
-            {/* <FormControl my={6}>
+          <Text my={6} fontWeight="bold" fontSize="2rem" color="#4299E1">
+            LOGIN
+          </Text>
+          <form onSubmit={props.btnClick}>
+            <FormControl my={6}>
               <Input
-                id="name"
+                type="text"
+                placeholder="USER NAME"
+                value={props.state.userName}
                 variant="flushed"
                 name="userName"
-                placeholder="USER NAME"
                 color="white"
                 onChange={props.changeHandle}
                 borderColor={props.state.erroru ? "crimson" : "#2A69AC"}
-                focusBorderColor={props.state.errorp ? "crimson" : "#2A69AC"}
+                focusBorderColor={props.state.erroru ? "crimson" : "#2A69AC"}
               />
               <FormHelperText color="red.500">
-                {props.state.erroru ? props.state.errorum : ""}
+                {props.state.errorum}
               </FormHelperText>
             </FormControl>
             <FormControl my={6}>
               <Input
-                id="name"
+                type="password"
                 variant="flushed"
-                name="userName"
                 placeholder="PASSWORD"
                 color="white"
+                name="password"
+                value={props.state.password}
                 onChange={props.changeHandle}
                 borderColor={props.state.errorp ? "crimson" : "#2A69AC"}
                 focusBorderColor={props.state.errorp ? "crimson" : "#2A69AC"}
               />
               <FormHelperText color="red.500">
-                {props.state.errorp ? props.state.errorpm : ""}
+                {props.state.errorpm}
               </FormHelperText>
-            </FormControl> */}
-
-            <Input
-              my={6}
-              variant="flushed"
-              name="userName"
-              placeholder="USER NAME"
-              color="white"
-              onChange={props.changeHandle}
-              borderColor={props.state.erroru ? "crimson" : "#2A69AC"}
-              focusBorderColor={props.state.erroru ? "crimson" : "#2A69AC"}
-            />
-            <FormHelperText color="red.500">
-              {props.state.erroru ? props.state.errorum : ""}
-            </FormHelperText>
-
-            <Input
-              name="password"
-              my={6}
-              variant="flushed"
-              placeholder="PASSWORD"
-              color="white"
-              borderColor="#2A69AC"
-              onChange={props.changeHandle}
-              borderColor={props.state.errorp ? "crimson" : "#2A69AC"}
-              focusBorderColor={props.state.errorp ? "crimson" : "#2A69AC"}
-            />
-            <FormHelperText color="red.500">
-              {props.state.errorp ? props.state.errorpm : ""}
-            </FormHelperText>
+            </FormControl>
             {props.state.log ? (
-              <Link to="/main">
-                <Button my={6} w={32} onClick={props.btnClick}>
-                  LOGIN
-                </Button>
-              </Link>
+              <Redirect to="/main" />
             ) : (
-              <Button my={6} w={32} onClick={props.btnClick}>
-                LOGIN
+              <Button type="submit" my={6}>
+                Login
               </Button>
             )}
           </form>

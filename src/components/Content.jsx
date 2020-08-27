@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import {
   Box,
   Text,
@@ -39,6 +39,9 @@ class Content extends Component {
   onFilter = (e) => {
     this.setState({ filterVal: e.target.value });
   };
+  componentDidMount() {
+    this.props.state.entry = false;
+  }
   render() {
     return (
       <React.Fragment>
@@ -334,40 +337,48 @@ class Content extends Component {
             </Grid>
             {this.props.state.cou.map((data, idx) => (
               <Grid templateColumns="repeat(8, 1fr)" p={2} gap={2} key={idx}>
-                <Text>{data.name}</Text>
+                <Text>{data.userName}</Text>
                 <Text>{data.phone}</Text>
                 <Text>{data.email}</Text>
                 <Text>{data.pledgedDate}</Text>
                 <Text textAlign="center">{data.pledgedAmount}</Text>
-                <Text>{data.recievedDate}</Text>
-                <Text textAlign="center">{data.recievedAmount}</Text>
+                {Object.keys(data).length === 8 ? (
+                  <Text>-</Text>
+                ) : (
+                  <Text>{data.recievedDate}</Text>
+                )}
+                {Object.keys(data).length === 8 ? (
+                  <Text>-</Text>
+                ) : (
+                  <Text textAlign="center">{data.recievedAmount}</Text>
+                )}
                 <Text
                   color={
-                    data.status === "recieved"
+                    data.status.toLowerCase() === "recieved"
                       ? "green.500"
-                      : data.status === "pledged"
+                      : data.status.toLowerCase() === "pledged"
                       ? "teal.500"
-                      : data.status === "declined"
+                      : data.status.toLowerCase() === "declined"
                       ? "red.500"
                       : "blue.500"
                   }
                 >
                   <ListIcon
                     icon={
-                      data.status === "recieved"
+                      data.status.toLowerCase() === "recieved"
                         ? "check-circle"
-                        : data.status === "pledged"
+                        : data.status.toLowerCase() === "pledged"
                         ? "time"
-                        : data.status === "declined"
+                        : data.status.toLowerCase() === "declined"
                         ? "warning"
                         : "check-circle"
                     }
                     color={
-                      data.status === "recieved"
+                      data.status.toLowerCase() === "recieved"
                         ? "green.500"
-                        : data.status === "pledged"
+                        : data.status.toLowerCase() === "pledged"
                         ? "teal.500"
-                        : data.status === "declined"
+                        : data.status.toLowerCase() === "declined"
                         ? "red.500"
                         : "blue.500"
                     }
@@ -391,20 +402,18 @@ class Content extends Component {
                     >
                       <PopoverArrow />
                       <PopoverBody color="white">
-                        <Button
-                          backgroundColor="teal.500"
-                          border="none"
-                          onClick={() => this.props.onEdit(data.id)}
-                        >
-                          {this.props.state.edit ? (
-                            <Link to="/newForm">
-                              <Icon name="edit" mr={2} />
-                            </Link>
-                          ) : (
+                        {this.props.state.edit ? (
+                          <Redirect to="/newForm" />
+                        ) : (
+                          <Button
+                            backgroundColor="teal.500"
+                            border="none"
+                            onClick={() => this.props.onEdit(data._id)}
+                          >
                             <Icon name="edit" mr={2} />
-                          )}
-                          Edit
-                        </Button>
+                            Edit
+                          </Button>
+                        )}
                         <br></br>
                         <Button
                           icon="delete"
@@ -435,7 +444,7 @@ class Content extends Component {
               >
                 <Grid templateColumns="2fr 1fr" backgroundColor="#CBD5E0">
                   <Text pl={4} py={4}>
-                    {data.name}
+                    {data.userName}
                   </Text>
                   <Text
                     pl={4}
@@ -488,12 +497,16 @@ class Content extends Component {
                 <Grid templateColumns="1fr 1fr">
                   <Text pl={4} pb={2}>
                     {data.status === "recieved" || data.status === "reduced"
-                      ? data.recievedAmount
+                      ? data.recievedAmount > 0
+                        ? data.recievedAmount
+                        : "-"
                       : data.pledgedAmount}
                   </Text>
                   <Text pl={4} pb={2}>
                     {data.status === "recieved" || data.status === "reduced"
-                      ? data.recievedDate
+                      ? data.recievedDate.length > 0
+                        ? data.recievedDate
+                        : "-"
                       : data.pledgedDate}
                   </Text>
                 </Grid>
@@ -513,7 +526,7 @@ class Content extends Component {
             <ReactPaginate
               previousLabel={<Icon name="chevron-left" />}
               nextLabel={<Icon name="chevron-right" />}
-              breakLabel={"/ " + " " + this.props.state.pageCount}
+              breakLabel={"/ " + this.props.state.pageCount}
               pageCount={this.props.state.pageCount}
               marginPagesDisplayed={0}
               pageRangeDisplayed={0}

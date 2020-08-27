@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Box, Text } from "@chakra-ui/core";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-function Submit() {
+import { Link } from "react-router-dom";
+function Submit(props) {
+  useEffect(() => {
+    props.state.entry = false;
+  }, []);
   return (
     <Box mt={6} mx={[0, 0, 4, 4]} d="flex">
       <Box

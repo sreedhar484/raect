@@ -3,12 +3,9 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-  PopoverHeader,
   PopoverBody,
-  PopoverFooter,
   PopoverArrow,
   PopoverCloseButton,
-  Button,
   IconButton,
 } from "@chakra-ui/core";
 function Pophover() {

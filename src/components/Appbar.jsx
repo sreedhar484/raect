@@ -4,7 +4,16 @@ import ReactPaginate from "react-paginate";
 import "../App.css";
 function Appbar(props) {
   return (
-    <Box h={20} backgroundColor="blue.800" width="100%" float="right" mt="0px">
+    <Box
+      h={20}
+      backgroundColor="blue.800"
+      width="100%"
+      float="right"
+      mt="0px"
+      overflow="hidden"
+      top="0"
+      position="sticky"
+    >
       <Flex
         float={["left", "left", "left", "right"]}
         ml={["10%", "10%", "10%", "0%"]}
