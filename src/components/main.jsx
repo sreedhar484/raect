@@ -34,6 +34,8 @@ class Main extends Component {
       type: "",
       notes: "",
       edit: false,
+      editone: false,
+      userid: 0,
       errorum: "",
       errorpm: "",
       erroruser: "",
@@ -44,6 +46,7 @@ class Main extends Component {
       entry: false,
       amountCount: 0,
       pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+      patternphone: /^\d{10}$/,
     };
   }
   onDownClick = () => {
@@ -73,7 +76,7 @@ class Main extends Component {
     );
   };
   componentDidMount() {
-    Axios.get("http://localhost:3430/details")
+    Axios.get("http://localhost:2733/details")
       .then((res) => {
         console.log(res.data);
         this.getData(res.data);
@@ -94,9 +97,7 @@ class Main extends Component {
       });
       this.setState({
         totalrecieved: this.state.array
-          .map((data) =>
-            Object.keys(data).length === 8 ? 0 : data.recievedAmount
-          )
+          .map((data) => (data.recievedAmount ? data.recievedAmount : 0))
           .reduce((a, b) => a + b),
       });
     });
@@ -109,15 +110,16 @@ class Main extends Component {
     this.setState({ name: "", phone: "", email: "" });
   };
   onEdit = (id) => {
-    const data = this.state.array.filter((data) => data._id === id);
+    const data = this.state.array.filter((data) => data.userId === id);
     this.setState(
       {
-        name: data[0].userName,
+        name: data[0].Name,
         phone: data[0].phone,
         email: data[0].email,
+        userid: data[0].userId,
         edit: true,
       },
-      () => console.log(this.state.edit)
+      () => console.log(this.state.userid)
     );
   };
   nameChange = (event) => {
@@ -131,7 +133,7 @@ class Main extends Component {
     this.setState(
       {
         temp: this.state.array.sort((a, b) =>
-          a.userName > b.userName ? 1 : b.userName > a.userName ? -1 : 0
+          a.Name > b.Name ? 1 : b.Name > a.Name ? -1 : 0
         ),
       },
       () => this.getData(this.state.temp)
@@ -141,7 +143,7 @@ class Main extends Component {
     this.setState(
       {
         temp: this.state.array.sort((a, b) =>
-          a.userName < b.userName ? 1 : b.userName < a.userName ? -1 : 0
+          a.Name < b.Name ? 1 : b.Name < a.Name ? -1 : 0
         ),
       },
       () => this.getData(this.state.temp)
@@ -167,6 +169,11 @@ class Main extends Component {
       () => this.getData(this.state.temp)
     );
   };
+  onDelete = (id) => {
+    Axios.delete("http://localhost:2733/deldetails/" + id)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  };
   pledgedAsci = () => {
     this.setState(
       {
@@ -190,7 +197,7 @@ class Main extends Component {
 
   btnClick = (event) => {
     event.preventDefault();
-    Axios.post("http://localhost:3430/login", {
+    Axios.post("http://localhost:2733/login", {
       userName: this.state.userName,
       password: this.state.password,
     })
@@ -205,28 +212,16 @@ class Main extends Component {
         }
       })
       .catch((err) => console.log(err));
-    // if (this.state.userName === "sree") {
-    //   this.setState({ erroru: false });
-    //   if (this.state.password === "sreedhar") {
-    //     this.setState({ errorp: false, log: true });
-    //   } else {
-    //     this.setState({ errorp: true, errorum: "incorrect username" });
-    //   }
-    // } else {
-    //   this.setState({ erroru: true, errorpm: "incorrect password" });
-    // }
   };
   search = (event) => {
     this.setState({ search: event.target.value }, () => {
       this.state.search.length > 0
         ? this.setState({
             cou: this.state.array.filter((ele) =>
-              ele.userName
-                .toLowerCase()
-                .startsWith(this.state.search.toLowerCase())
+              ele.Name.toLowerCase().startsWith(this.state.search.toLowerCase())
             ),
           })
-        : Axios.get("http://localhost:3430/details")
+        : Axios.get("http://localhost:2733/details")
             .then((res) => {
               this.getData(res.data);
             })
@@ -239,29 +234,66 @@ class Main extends Component {
   onSubmit1 = (event) => {
     if (this.state.name.length > 0) {
       this.setState({ erroruser: "" });
-      if (this.state.phone.length === 10) {
+      if (this.state.patternphone.test(this.state.phone)) {
         this.setState({ errorphone: "" });
         if (this.state.pattern.test(this.state.email)) {
           this.setState({ erroremail: "" });
           if (this.state.type !== "") {
             this.setState({ entry: true, errortype: "" });
-            Axios.post("http://localhost:3430/deb_form", {
-              userName: this.state.name,
-              phone: Number(this.state.phone),
-              email: this.state.email,
-              deb_type: this.state.type,
-              deb_amount: this.state.amountCount * 1000 + 10000,
-            })
-              .then((res) => {
-                console.log(res);
-                Axios.get("http://localhost:3430/details")
+            this.state.editone
+              ? Axios.put(
+                  "http://localhost:2733/editdetails/" + this.state.userid,
+                  {
+                    Name: this.state.name,
+                    phone: Number(this.state.phone),
+                    email: this.state.email,
+                    deb_type: this.state.type,
+                    deb_amount: this.state.amountCount * 1000 + 10000,
+                  }
+                )
                   .then((res) => {
-                    console.log(res.data);
-                    this.getData(res.data);
+                    console.log(res);
+                    Axios.get("http://localhost:2733/details")
+                      .then((res) => {
+                        console.log(res.data);
+                        this.setState({
+                          name: "",
+                          phone: "",
+                          email: "",
+                          type: "",
+                          editone: false,
+                          amountCount: 0,
+                        });
+                        this.getData(res.data);
+                      })
+                      .catch((err) => console.log(err));
+                  })
+                  .catch((err) => console.log(err))
+              : Axios.post("http://localhost:2733/deb_form", {
+                  Name: this.state.name,
+                  phone: Number(this.state.phone),
+                  email: this.state.email,
+                  deb_type: this.state.type,
+                  deb_amount: this.state.amountCount * 1000 + 10000,
+                })
+
+                  .then((res) => {
+                    console.log(res);
+                    Axios.get("http://localhost:2733/details")
+                      .then((res) => {
+                        console.log(res.data);
+                        this.setState({
+                          name: "",
+                          phone: "",
+                          email: "",
+                          type: "",
+                          amountCount: 0,
+                        });
+                        this.getData(res.data);
+                      })
+                      .catch((err) => console.log(err));
                   })
                   .catch((err) => console.log(err));
-              })
-              .catch((err) => console.log(err));
           } else {
             this.setState({ errortype: "plese select any type" });
           }
@@ -308,6 +340,7 @@ class Main extends Component {
                   addNew={this.addNew}
                   onFilterChange={this.onFilterChange}
                   onDownClick={this.onDownClick}
+                  onDelete={this.onDelete}
                 />
               </Route>
               <Route path="/newForm">

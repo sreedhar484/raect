@@ -19,6 +19,9 @@ import {
 
 function NewForm(props) {
   useEffect(() => {
+    props.state.edit
+      ? (props.state.editone = true)
+      : (props.state.editone = false);
     props.state.edit = false;
   }, []);
   return (
@@ -67,7 +70,6 @@ function NewForm(props) {
                   variant="flushed"
                   name="phone"
                   id="phone"
-                  type="tel"
                   value={props.state.phone}
                   onChange={props.nameChange}
                 ></Input>

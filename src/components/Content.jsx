@@ -337,21 +337,15 @@ class Content extends Component {
             </Grid>
             {this.props.state.cou.map((data, idx) => (
               <Grid templateColumns="repeat(8, 1fr)" p={2} gap={2} key={idx}>
-                <Text>{data.userName}</Text>
+                <Text>{data.Name}</Text>
                 <Text>{data.phone}</Text>
                 <Text>{data.email}</Text>
                 <Text>{data.pledgedDate}</Text>
                 <Text textAlign="center">{data.pledgedAmount}</Text>
-                {Object.keys(data).length === 8 ? (
-                  <Text>-</Text>
-                ) : (
-                  <Text>{data.recievedDate}</Text>
-                )}
-                {Object.keys(data).length === 8 ? (
-                  <Text>-</Text>
-                ) : (
-                  <Text textAlign="center">{data.recievedAmount}</Text>
-                )}
+                <Text>{data.recievedDate ? data.recievedDate : "-"}</Text>
+                <Text textAlign="center">
+                  {data.recievedAmount ? data.recievedAmount : "-"}
+                </Text>
                 <Text
                   color={
                     data.status.toLowerCase() === "recieved"
@@ -408,7 +402,7 @@ class Content extends Component {
                           <Button
                             backgroundColor="teal.500"
                             border="none"
-                            onClick={() => this.props.onEdit(data._id)}
+                            onClick={() => this.props.onEdit(data.userId)}
                           >
                             <Icon name="edit" mr={2} />
                             Edit
@@ -419,6 +413,7 @@ class Content extends Component {
                           icon="delete"
                           backgroundColor="teal.500"
                           border="none"
+                          onClick={() => this.props.onDelete(data.userId)}
                         >
                           <Icon name="delete" mr={2}></Icon>Delete
                         </Button>
@@ -444,7 +439,7 @@ class Content extends Component {
               >
                 <Grid templateColumns="2fr 1fr" backgroundColor="#CBD5E0">
                   <Text pl={4} py={4}>
-                    {data.userName}
+                    {data.Name}
                   </Text>
                   <Text
                     pl={4}
