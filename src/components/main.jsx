@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import Appbar from "./Appbar";
 import Content from "./Content";
-import { Stack, Box } from "@chakra-ui/core";
+import { Stack, Box, useToast } from "@chakra-ui/core";
 import NewForm from "./NewForm";
 import Submit from "./Submit";
 import Log from "./log";
 import "../App.css";
+import Toast from "./Toast";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Axios from "axios";
 
@@ -23,10 +24,11 @@ class Main extends Component {
       erroru: false,
       log: false,
       search: "",
+      search1: true,
       totalpledged: 0,
       totalrecieved: 0,
       offset: 0,
-      perPage: 3,
+      perPage: 4,
       currentPage: 0,
       name: "",
       phone: "",
@@ -76,6 +78,9 @@ class Main extends Component {
     );
   };
   componentDidMount() {
+    this.getData1();
+  }
+  getData1() {
     Axios.get("http://localhost:2733/details")
       .then((res) => {
         console.log(res.data);
@@ -171,7 +176,10 @@ class Main extends Component {
   };
   onDelete = (id) => {
     Axios.delete("http://localhost:2733/deldetails/" + id)
-      .then((res) => console.log(res))
+      .then((res) => {
+        console.log(res);
+        this.getData1();
+      })
       .catch((err) => console.log(err));
   };
   pledgedAsci = () => {
@@ -215,17 +223,17 @@ class Main extends Component {
   };
   search = (event) => {
     this.setState({ search: event.target.value }, () => {
-      this.state.search.length > 0
-        ? this.setState({
-            cou: this.state.array.filter((ele) =>
-              ele.Name.toLowerCase().startsWith(this.state.search.toLowerCase())
-            ),
-          })
-        : Axios.get("http://localhost:2733/details")
-            .then((res) => {
-              this.getData(res.data);
-            })
-            .catch((err) => console.log(err));
+      if (this.state.search.length > 0) {
+        this.setState({
+          search1: false,
+          cou: this.state.array.filter((ele) =>
+            ele.Name.toLowerCase().startsWith(this.state.search.toLowerCase())
+          ),
+        });
+      } else {
+        this.setState({ search1: true });
+        this.getData1();
+      }
     });
   };
   onFilterChange = (value) => {
@@ -253,20 +261,15 @@ class Main extends Component {
                 )
                   .then((res) => {
                     console.log(res);
-                    Axios.get("http://localhost:2733/details")
-                      .then((res) => {
-                        console.log(res.data);
-                        this.setState({
-                          name: "",
-                          phone: "",
-                          email: "",
-                          type: "",
-                          editone: false,
-                          amountCount: 0,
-                        });
-                        this.getData(res.data);
-                      })
-                      .catch((err) => console.log(err));
+                    this.setState({
+                      name: "",
+                      phone: "",
+                      email: "",
+                      type: "",
+                      editone: false,
+                      amountCount: 0,
+                    });
+                    this.getData1();
                   })
                   .catch((err) => console.log(err))
               : Axios.post("http://localhost:2733/deb_form", {
@@ -279,19 +282,14 @@ class Main extends Component {
 
                   .then((res) => {
                     console.log(res);
-                    Axios.get("http://localhost:2733/details")
-                      .then((res) => {
-                        console.log(res.data);
-                        this.setState({
-                          name: "",
-                          phone: "",
-                          email: "",
-                          type: "",
-                          amountCount: 0,
-                        });
-                        this.getData(res.data);
-                      })
-                      .catch((err) => console.log(err));
+                    this.setState({
+                      name: "",
+                      phone: "",
+                      email: "",
+                      type: "",
+                      amountCount: 0,
+                    });
+                    this.getData1();
                   })
                   .catch((err) => console.log(err));
           } else {

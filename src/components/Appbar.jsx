@@ -23,7 +23,7 @@ function Appbar(props) {
         <Avatar src="https://bit.ly/sage-adebayo" border="2px solid white" />
         <Box ml="3" color="white">
           <Text fontWeight="bold" d={["none", "none", "none", "flex"]}>
-            Malla Reddy
+            Malla reddy
           </Text>
           <Text fontSize="sm" d={["none", "none", "none", "flex"]}>
             CEO

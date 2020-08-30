@@ -134,6 +134,16 @@ class Content extends Component {
                   ADD A NEW ENTRY
                 </Button>
               </Link>
+              <Text
+                d={
+                  this.props.state.search1
+                    ? ["none", "none", "none", "none"]
+                    : ["none", "none", "none", "inline"]
+                }
+                float="right"
+              >
+                {this.props.state.cou.length} results found
+              </Text>
             </Text>
             <InputGroup d={["none", "none", "none", "flex"]}>
               <InputLeftElement
@@ -247,13 +257,13 @@ class Content extends Component {
                     icon="triangle-up"
                     border="none"
                     backgroundColor="none"
-                    size="8px"
+                    size={1}
                     onClick={this.props.nameAsci}
                   />
                   <IconButton
                     icon="triangle-down"
                     border="none"
-                    size="8px"
+                    size={1}
                     backgroundColor="none"
                     onClick={this.props.nameDsci}
                   />
@@ -336,10 +346,12 @@ class Content extends Component {
               <Text>STATUS</Text>
             </Grid>
             {this.props.state.cou.map((data, idx) => (
-              <Grid templateColumns="repeat(8, 1fr)" p={2} gap={2} key={idx}>
+              <Grid templateColumns="repeat(8, 1fr)" p={2} key={idx}>
                 <Text>{data.Name}</Text>
                 <Text>{data.phone}</Text>
-                <Text>{data.email}</Text>
+                <Text overflow="hidden" textOverflow="ellipsis">
+                  {data.email}
+                </Text>
                 <Text>{data.pledgedDate}</Text>
                 <Text textAlign="center">{data.pledgedAmount}</Text>
                 <Text>{data.recievedDate ? data.recievedDate : "-"}</Text>
@@ -421,6 +433,50 @@ class Content extends Component {
                     </PopoverContent>
                   </Popover>
                 </Text>
+                {/* <Text>
+                  <Popover>
+                    <PopoverTrigger>
+                      <IconButton
+                        variant="outline"
+                        variantColor="white"
+                        aria-label="Call Sage"
+                        fontSize="20px"
+                        icon="drag-handle"
+                        border="none"
+                      ></IconButton>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      zIndex={4}
+                      backgroundColor="teal.500"
+                      w="150px"
+                    >
+                      <PopoverArrow />
+                      <PopoverBody color="white">
+                        {this.props.state.edit ? (
+                          <Redirect to="/newForm" />
+                        ) : (
+                          <Button
+                            backgroundColor="teal.500"
+                            border="none"
+                            onClick={() => this.props.onEdit(data.userId)}
+                          >
+                            <Icon name="edit" mr={2} />
+                            Edit
+                          </Button>
+                        )}
+                        <br></br>
+                        <Button
+                          icon="delete"
+                          backgroundColor="teal.500"
+                          border="none"
+                          onClick={() => this.props.onDelete(data.userId)}
+                        >
+                          <Icon name="delete" mr={2}></Icon>Delete
+                        </Button>
+                      </PopoverBody>
+                    </PopoverContent>
+                  </Popover>
+                </Text> */}
               </Grid>
             ))}
           </Grid>
