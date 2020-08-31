@@ -1,14 +1,15 @@
 import React, { Component } from "react";
 import Appbar from "./Appbar";
 import Content from "./Content";
-import { Stack, Box, useToast } from "@chakra-ui/core";
+import { Stack, Box } from "@chakra-ui/core";
 import NewForm from "./NewForm";
 import Submit from "./Submit";
 import Log from "./log";
 import "../App.css";
-import Toast from "./Toast";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 class Main extends Component {
   constructor(props) {
@@ -50,6 +51,7 @@ class Main extends Component {
       pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
       patternphone: /^\d{10}$/,
     };
+    toast.configure();
   }
   onDownClick = () => {
     this.setState({ amountCount: Number(this.state.amountCount) + 1 });
@@ -84,7 +86,9 @@ class Main extends Component {
     Axios.get("http://localhost:2733/details")
       .then((res) => {
         console.log(res.data);
-        this.getData(res.data);
+        if (res.data.length !== 0) {
+          this.getData(res.data);
+        }
       })
       .catch((err) => console.log(err));
   }
@@ -178,6 +182,7 @@ class Main extends Component {
     Axios.delete("http://localhost:2733/deldetails/" + id)
       .then((res) => {
         console.log(res);
+        toast.success(res.data, { position: toast.POSITION.TOP_CENTER });
         this.getData1();
       })
       .catch((err) => console.log(err));
@@ -261,6 +266,9 @@ class Main extends Component {
                 )
                   .then((res) => {
                     console.log(res);
+                    toast.success(res.data, {
+                      position: toast.POSITION.TOP_CENTER,
+                    });
                     this.setState({
                       name: "",
                       phone: "",
@@ -282,6 +290,9 @@ class Main extends Component {
 
                   .then((res) => {
                     console.log(res);
+                    toast.success(res.data, {
+                      position: toast.POSITION.TOP_CENTER,
+                    });
                     this.setState({
                       name: "",
                       phone: "",
