@@ -2,54 +2,57 @@ import React, { useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 import {
   Box,
-  Text,
-  Button,
+  Flex,
   Input,
-  Radio,
-  RadioGroup,
-  InputRightElement,
-  Icon,
-  InputGroup,
-  Textarea,
-  FormControl,
   FormHelperText,
   FormLabel,
-  IconButton,
+  FormControl,
+  Button,
+  Text,
+  Textarea,
+  Radio,
+  RadioGroup,
+  InputGroup,
+  InputRightElement,
+  Icon,
+  Image,
 } from "@chakra-ui/core";
-
-function NewForm(props) {
+import Cross from "../asserts/Cross.svg";
+function DbForm(props) {
   useEffect(() => {
-    props.state.edit
-      ? (props.state.editone = true)
-      : (props.state.editone = false);
     props.state.edit = false;
   }, []);
   return (
-    <Box mt={6} mx={[0, 0, 0, 4]} d="flex">
-      <Box
-        mt={2}
-        mx={[0, 0, 2, 2]}
-        w="10%"
-        d={["none", "none", "none", "flex"]}
-      >
-        <Link to="/main" w="full">
+    <Flex mx="3%">
+      <Box width="18%" d={["none", "none", "none", "flex"]}>
+        <Link to="/dashboard">
           <Button
+            mt="50px"
+            border="1px solid #112147"
             backgroundColor="white"
-            color="#1A365D"
-            border="1px solid #1A365D"
+            w="143px"
+            h="40px"
           >
             BACK
           </Button>
         </Link>
       </Box>
-      <Box mt={[0, 0, 0, 2]} mx={6} w="80%">
+      <Box w={["100%", "100%", "100%", "82%"]}>
         <form onSubmit={props.onSubmit1}>
-          <Text color="#1A365D" fontWeight="bold" pt={2}>
+          <Text
+            color="#104670"
+            fontSize="18px"
+            fontWeight="bold"
+            mt={["24px", "24px", "30px", "55px"]}
+          >
             New Debenture Form
           </Text>
-          <FormControl mt={8}>
-            <FormLabel htmlFor="name">User Name</FormLabel>
+          <FormControl mt={6}>
+            <FormLabel htmlFor="name" opacity="0.45">
+              USER NAME
+            </FormLabel>
             <Input
+              mt={-4}
               placeholder="User Name"
               variant="flushed"
               name="name"
@@ -63,9 +66,12 @@ function NewForm(props) {
           </FormControl>
           <Box d={["", "", "", "flex"]}>
             <Box w={["100%", "100%", "100%", "25%"]}>
-              <FormControl mt={8}>
-                <FormLabel htmlFor="phone">PHONE</FormLabel>
+              <FormControl mt={6}>
+                <FormLabel htmlFor="phone" opacity="0.45">
+                  PHONE
+                </FormLabel>
                 <Input
+                  mt={-4}
                   placeholder="PHONE"
                   variant="flushed"
                   name="phone"
@@ -82,9 +88,12 @@ function NewForm(props) {
               w={["100%", "100%", "100%", "70%"]}
               ml={["0%", "0%", "0%", "5%"]}
             >
-              <FormControl mt={8}>
-                <FormLabel htmlFor="email">EMAIL</FormLabel>
+              <FormControl mt={6}>
+                <FormLabel htmlFor="email" opacity="0.45">
+                  EMAIL
+                </FormLabel>
                 <Input
+                  mt={-4}
                   placeholder="EMAIL"
                   variant="flushed"
                   name="email"
@@ -99,22 +108,36 @@ function NewForm(props) {
               </FormControl>
             </Box>
           </Box>
-          <FormControl mt={8}>
-            <FormLabel htmlFor="type">DEBENTURE TYPE</FormLabel>
+          <FormControl mt={6}>
+            <FormLabel htmlFor="type" opacity="0.45">
+              DEBENTURE TYPE
+            </FormLabel>
             <RadioGroup
               id="type"
+              mt={2}
               name="type"
               onChange={props.nameChange}
               value={props.type}
               defaultValue="0"
               spacing={[2, 2, 2, 10]}
-              mt={4}
-              isInline={["", "", "", "true"]}
+              d="flex"
+              flexDirection={["column", "column", "column", "row"]}
             >
-              <Radio variantColor="green" value="book">
+              <Radio
+                variantColor="green"
+                value="book"
+                mt={-4}
+                mr={6}
+                isDisabled={props.state.editone ? true : false}
+              >
                 Book Debenture
               </Radio>
-              <Radio variantColor="green" value="purchase">
+              <Radio
+                variantColor="green"
+                value="purchase"
+                mt={-4}
+                isDisabled={props.state.editone ? false : true}
+              >
                 Purchase Debenture
               </Radio>
             </RadioGroup>
@@ -122,14 +145,15 @@ function NewForm(props) {
               {props.state.errortype}
             </FormHelperText>
           </FormControl>
-          <FormControl mt={8}>
-            <FormLabel htmlFor="amount">DEBENTURE AMOUNT</FormLabel>
-            <Text id="amount" mt={4} d="flex">
-              10,000{"  "}+{"   "}(
-              <InputGroup>
+          <FormControl mt={2}>
+            <FormLabel htmlFor="amount" opacity="0.45">
+              DEBENTURE AMOUNT
+            </FormLabel>
+            <Box id="amount" mt={2} d="flex">
+              <InputGroup w={["20%", "20%", "20%", "10%"]}>
                 <Input
                   variant="flushed"
-                  w={20}
+                  w="100%"
                   type="number"
                   h="28px"
                   name="amountCount"
@@ -138,28 +162,33 @@ function NewForm(props) {
                 />
                 <InputRightElement
                   children={
-                    <IconButton
-                      icon="chevron-down"
-                      color="green.500"
-                      size={8}
-                      mb={4}
-                      border="none"
+                    <Button
+                      mb={3}
                       backgroundColor="white"
                       onClick={props.onDownClick}
-                    />
+                    >
+                      <Icon name="triangle-down" />
+                    </Button>
                   }
                 />
               </InputGroup>
-              *1,000)
-              {"  "}={"   "}
-              <b font-size="20px">
-                &#8377;{props.state.amountCount * 1000 + 10000}
-              </b>
-            </Text>
+              <Image src={Cross} mx={4} />
+              <Text mx={2}>1,000</Text>
+              <Text mx={2}>=</Text>
+              <Input
+                variant="flushed"
+                w={["20%", "20%", "20%", "10%"]}
+                h="28px"
+                type="number"
+                _readOnly
+                value={props.state.amountCount * 1000}
+                onChange={props.nameChange}
+              />
+            </Box>
           </FormControl>
           {props.state.type === "purchase" ? (
             <Box>
-              <Text color="grey.200" mt={8}>
+              <Text color="grey.200" mt={6} opacity="0.45">
                 NOTES
               </Text>
               <Textarea name="notes" onChange={props.nameChange}></Textarea>
@@ -172,19 +201,19 @@ function NewForm(props) {
           ) : (
             <Button
               type="submit"
-              my={6}
+              mt={8}
+              mb={2}
               backgroundColor="#1A365D"
               color="white"
-              mt={8}
-              w={["100%", "100%", "15%", "15%"]}
+              w={["100%", "100%", "100%", "15%"]}
             >
               SUBMIT
             </Button>
           )}
         </form>
       </Box>
-    </Box>
+    </Flex>
   );
 }
 
-export default NewForm;
+export default DbForm;

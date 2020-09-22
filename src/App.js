@@ -1,17 +1,17 @@
 import React from "react";
 import "./App.css";
-import Main from "./components/main";
+import "bootstrap/dist/css/bootstrap.css";
+import Main from "./components/Main";
 import { ThemeProvider, CSSReset } from "@chakra-ui/core";
-import Toast from "./components/Toast";
 
 function App() {
   return (
     <ThemeProvider>
       <CSSReset />
-      {/* <Toast /> */}
-      <Main />
+      <div className="App">
+        <Main />
+      </div>
     </ThemeProvider>
   );
 }
-
 export default App;
